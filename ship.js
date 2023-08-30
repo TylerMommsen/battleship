@@ -1,5 +1,5 @@
 export default class Ship {
-    constructor(length, timesHit, hasSunk) {
+    constructor(length) {
         this.length = length;
         this.timesHit = 0;
         this.hasSunk = false;
