@@ -38,6 +38,6 @@ export default class GameBoard {
                 }
             }
         }
-        this.lost = true;
+        this.lost = true; // if all ships have been sunk, game is over
     }
 }
