@@ -3,13 +3,13 @@ import Player from './player';
 import DomHandler from './dom';
 
 function gameLoop() {
-    const leftBoard = new GameBoard('left');
-    const rightBoard = new GameBoard('right');
-    const player1 = new Player();
-    const player2 = new Player();
+    const userBoard = new GameBoard('left');
+    const computerBoard = new GameBoard('right');
+    const player = new Player(userBoard);
+    const computer = new Player(computerBoard);
 
     DomHandler.displayBoards();
-    leftBoard.placeShip(5, 'row', 3, 2);
+    DomHandler.createShips(player);
 }
 
 gameLoop();
