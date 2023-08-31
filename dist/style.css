@@ -13,18 +13,21 @@ body {
 }
 
 header {
-    padding: 20px;
-    font-size: 2rem;
+    padding: 40px 20px 0px 20px;
+    font-size: 3rem;
     color: white;
 }
 
 main {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .boards {
     display: flex;
-    gap: 50px;
+    gap: 40px;
 }
 
 .left-board,
@@ -35,6 +38,7 @@ main {
 
 .grid-square {
     border: 1px solid white;
+    background-color: rgb(44, 44, 44);
     width: 40px;
     height: 40px;
 }
