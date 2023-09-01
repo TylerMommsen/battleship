@@ -44,56 +44,21 @@ function updateBoard(board, side, row, col) {
     }
 }
 
-function createShips(player) {
-    const playerObj = player;
-    function addShip(square, index) {
-        function calcRow(x) {
-            const row = Math.floor(x / 10);
-            return row;
-        }
-        function calcCol(y) {
-            const column = (y % 10) - 1;
-            return column;
-        }
-
-        if (player.placedShipCount === 5) {
-            playerObj.placedShips = true;
-            return;
-        }
-
-        const row = calcRow(index);
-        const col = calcCol(index);
-
-        if (playerObj.placedShipCount === 0) {
-            player.board.placeShip(5, 'row', row, col);
-            player.setShipCount();
-        } else if (playerObj.placedShipCount === 1) {
-            player.board.placeShip(4, 'row', row, col);
-            player.setShipCount();
-        } else if (playerObj.placedShipCount > 1 && playerObj.placedShipCount < 4) {
-            player.board.placeShip(3, 'row', row, col);
-            player.setShipCount();
-        } else if (playerObj.placedShipCount === 4) {
-            player.board.placeShip(2, 'row', row, col);
-            player.setShipCount();
-            player.setPlacedShips();
-        }
-    }
-
-    if (!playerObj.placedShips) {
-        const allSquares = document.querySelector('.left-board').childNodes;
-        allSquares.forEach((square, index) => {
-            square.addEventListener('click', () => {
-                addShip(square, index);
-            });
+function handleClick(board) {
+    const allSquares = document.querySelector('.left-board').childNodes;
+    allSquares.forEach((square, index) => {
+        square.addEventListener('click', () => {
+            if (board.player.placedShipCount !== 5) {
+                board.checkAdjacentSquares(index);
+            }
         });
-    }
+    });
 }
 
 const DomHandler = {
     displayBoards,
-    createShips,
     updateBoard,
+    handleClick,
 };
 
 export default DomHandler;

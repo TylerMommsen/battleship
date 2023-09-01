@@ -1,9 +1,8 @@
 export default class Player {
-    constructor(board) {
+    constructor() {
         this.currentTurn = false;
         this.placedShips = false;
         this.placedShipCount = 0;
-        this.board = board;
     }
 
     setShipCount() {
