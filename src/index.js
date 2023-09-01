@@ -7,6 +7,7 @@ function gameLoop() {
 
     DomHandler.displayBoards();
     const userBoard = new GameBoard('left', player);
+    DomHandler.rotateShipPlacement(userBoard);
 }
 
 gameLoop();

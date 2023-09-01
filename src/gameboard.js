@@ -7,6 +7,7 @@ export default class GameBoard {
         this.player = player;
         this.lost = false;
         this.side = side;
+        this.currentPlacementRotation = 'row';
         DomHandler.handleClick(this);
     }
 
@@ -51,7 +52,7 @@ export default class GameBoard {
     }
 
     addShip(row, col, shipLength) {
-        this.placeShip(shipLength, 'row', row, col);
+        this.placeShip(shipLength, this.currentPlacementRotation, row, col);
         this.player.setShipCount();
     }
 
@@ -90,23 +91,27 @@ export default class GameBoard {
             break;
         }
 
-        const isOccupied = (r, c) => {
-            if (col === -1) return true;
-            if (this.board[r] && this.board[r][c] instanceof Ship) {
-                return true;
+        const isValidSpot = (r, c) => {
+            if (this.currentPlacementRotation === 'row' && col === -1) return false;
+            if (this.currentPlacementRotation === 'col' && row === 9) return false;
+            if (this.currentPlacementRotation === 'row' && this.board[r] && this.board[r][c] instanceof Ship) {
+                return false;
+            }
+            if (this.currentPlacementRotation === 'col' && this.board[r] && this.board[r][col] instanceof Ship) {
+                return false;
             }
             if (col > calcCol(index + shipLength - 1)) {
                 if (calcCol(index + shipLength - 1) !== -1) {
-                    return true;
+                    return false;
                 }
             }
-            return false;
+            return true;
         };
 
         // Check all adjacent squares, including diagonals
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = col - 1; c <= col + shipLength; c++) {
-                if (isOccupied(r, c)) {
+                if (!isValidSpot(r, c)) {
                     return; // Adjacent square is occupied or out of bounds
                 }
             }
