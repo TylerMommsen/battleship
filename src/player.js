@@ -5,4 +5,12 @@ export default class Player {
         this.placedShipCount = 0;
         this.board = board;
     }
+
+    setShipCount() {
+        this.placedShipCount += 1;
+    }
+
+    setPlacedShips() {
+        this.placedShips = !this.placedShips;
+    }
 }

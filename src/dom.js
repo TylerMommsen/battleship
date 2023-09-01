@@ -66,6 +66,17 @@ function createShips(player) {
 
         if (playerObj.placedShipCount === 0) {
             player.board.placeShip(5, 'row', row, col);
+            player.setShipCount();
+        } else if (playerObj.placedShipCount === 1) {
+            player.board.placeShip(4, 'row', row, col);
+            player.setShipCount();
+        } else if (playerObj.placedShipCount > 1 && playerObj.placedShipCount < 4) {
+            player.board.placeShip(3, 'row', row, col);
+            player.setShipCount();
+        } else if (playerObj.placedShipCount === 4) {
+            player.board.placeShip(2, 'row', row, col);
+            player.setShipCount();
+            player.setPlacedShips();
         }
     }
 
