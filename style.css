@@ -70,11 +70,19 @@ main {
     gap: 40px;
 }
 
-.left-board,
-.right-board,
-.modal-board {
+.player-board,
+.enemy-board,
+.player-modal-board {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
+}
+
+.enemy-board {
+    cursor: pointer;
+}
+
+.player-modal-board .grid-square:not(.ship) {
+    cursor: pointer;
 }
 
 .grid-square {
@@ -88,12 +96,15 @@ main {
 }
 
 .missed {
-    background-color: black;
+    background-color: rgb(122, 122, 122);
+}
+
+.hit {
+    background-color: red;
 }
 
 .empty {
     background-color: rgb(44, 44, 44);
-    cursor: pointer;
 }
 
 footer {
