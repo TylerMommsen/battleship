@@ -5,9 +5,10 @@ import DomHandler from './dom';
 function gameLoop() {
     const player = new Player();
 
-    DomHandler.displayBoards();
-    const userBoard = new GameBoard('left', player);
-    DomHandler.rotateShipPlacement(userBoard);
+    // const userBoard = new GameBoard('left', player);
+    const modalBoard = new GameBoard('modal', player);
+    // DomHandler.displayBoards();
+    DomHandler.rotateShipPlacement(modalBoard);
 }
 
 gameLoop();

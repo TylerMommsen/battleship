@@ -6,7 +6,7 @@ export default class GameBoard {
         this.board = Array.from({ length: 10 }, () => Array(10).fill(null)); // create 10x10 grid
         this.player = player;
         this.lost = false;
-        this.side = side;
+        this.side = side; // your board or enemy board ('left' or 'right' or 'modal')
         this.currentPlacementRotation = 'row';
         DomHandler.handleClick(this);
     }
@@ -59,17 +59,11 @@ export default class GameBoard {
     // check if squares next to clicked pos are occupied before placing ship
     checkAdjacentSquares(index) {
         const calcRow = (x) => {
-            let row = Math.floor(x / 10);
-            if (x % 10 === 0) {
-                row -= 1;
-            }
+            const row = Math.floor(x / 10);
             return row;
         };
         const calcCol = (y) => {
-            let column = (y % 10) - 1;
-            if (column === -1) {
-                column = 9;
-            }
+            const column = (y % 10);
             return column;
         };
 
@@ -99,16 +93,15 @@ export default class GameBoard {
         }
 
         const isValidPlacement = (r, c) => {
-            if (this.currentPlacementRotation === 'row' && col === 9) return false;
-            if (this.currentPlacementRotation === 'col' && row === 9) return false;
-
-
+            // check if there is a ship already closeby
             if (this.currentPlacementRotation === 'row' && this.board[r] && this.board[r][c] instanceof Ship) {
                 return false;
             }
             if (this.currentPlacementRotation === 'col' && this.board[r] && this.board[r][c] instanceof Ship) {
                 return false;
             }
+
+            // check if out of bounds
             if (this.currentPlacementRotation === 'row' && col > calcCol(index + shipLength - 1)) {
                 return false;
             }
@@ -137,6 +130,7 @@ export default class GameBoard {
                 }
             }
         }
+        // passed checks, now add ship
         this.addShip(row, col, shipLength);
     }
 }

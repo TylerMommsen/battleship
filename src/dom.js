@@ -25,6 +25,8 @@ function updateBoard(board, side, row, col) {
         UIBoard = document.querySelector('.left-board');
     } else if (side === 'right') {
         UIBoard = document.querySelector('.right-board');
+    } else if (side === 'modal') {
+        UIBoard = document.querySelector('.modal-board');
     }
 
     function findSquare() {
@@ -45,7 +47,11 @@ function updateBoard(board, side, row, col) {
 }
 
 function handleClick(board) {
-    const allSquares = document.querySelector('.left-board').childNodes;
+    let allSquares = null;
+    if (board.side === 'modal') {
+        const modalBoard = document.querySelector('.modal-board');
+        allSquares = modalBoard.querySelectorAll('.grid-square');
+    }
     allSquares.forEach((square, index) => {
         square.addEventListener('click', () => {
             if (board.player.placedShipCount !== 5) {
