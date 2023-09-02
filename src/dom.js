@@ -1,13 +1,13 @@
 import Ship from './ship';
 
-function updateBoard(board, side, row, col) {
+function updateBoard(board, side, row, col, type) {
     let UIBoard = null;
-    if (side === 'left') {
-        UIBoard = document.querySelector('.left-board');
-    } else if (side === 'right') {
-        UIBoard = document.querySelector('.right-board');
+    if (side === 'player') {
+        UIBoard = document.querySelector('.player-board');
+    } else if (side === 'enemy') {
+        UIBoard = document.querySelector('.enemy-board');
     } else if (side === 'modal') {
-        UIBoard = document.querySelector('.modal-board');
+        UIBoard = document.querySelector('.player-modal-board');
     }
 
     function findSquare() {
@@ -15,51 +15,66 @@ function updateBoard(board, side, row, col) {
         return UIBoard.children[index];
     }
 
-    if (board[row][col] instanceof Ship) {
+    if (type === 'place-ship') {
         const square = findSquare();
         square.classList.remove('empty');
         square.classList.add('ship');
-    }
-    if (board[row][col] === 'missed') {
+    } else if (type === 'missed') {
         const square = findSquare();
         square.classList.remove('empty');
         square.classList.add('missed');
+    } else if (type === 'hit') {
+        const square = findSquare();
+        square.classList.remove('empty');
+        square.classList.add('hit');
     }
 }
 
 function handleClick(board) {
     let allSquares = null;
     if (board.side === 'modal') {
-        const modalBoard = document.querySelector('.modal-board');
-        allSquares = modalBoard.querySelectorAll('.grid-square');
-    }
-    allSquares.forEach((square, index) => {
-        square.addEventListener('click', () => {
-            if (board.player.placedShipCount !== 5) {
-                board.checkAdjacentSquares(index);
-            }
+        const playerModalBoard = document.querySelector('.player-modal-board');
+        allSquares = playerModalBoard.querySelectorAll('.grid-square');
+        allSquares.forEach((square, index) => {
+            square.addEventListener('click', () => {
+                if (board.player.placedShipCount !== 5) {
+                    board.checkAdjacentSquares(index);
+                }
+            });
         });
-    });
+    }
+    if (board.side === 'enemy') {
+        console.log('worked');
+        const enemyBoard = document.querySelector('.enemy-board');
+        allSquares = enemyBoard.querySelectorAll('.grid-square');
+        allSquares.forEach((square, index) => {
+            square.addEventListener('click', () => {
+                console.log('clicked');
+                board.enemyBoard.attackShip(index);
+            });
+        });
+    }
 }
 
 function rotateShipPlacement(board) {
+    const boardObj = board;
     const btn = document.querySelector('.rotate');
     btn.addEventListener('click', () => {
-        if (board.currentPlacementRotation === 'row') {
-            board.currentPlacementRotation = 'col';
-        } else if (board.currentPlacementRotation === 'col') {
-            board.currentPlacementRotation = 'row';
+        if (boardObj.currentRotation === 'row') {
+            boardObj.currentRotation = 'col';
+        } else if (boardObj.currentRotation === 'col') {
+            boardObj.currentRotation = 'row';
         }
     });
 }
 
 // disable modal popup and display both boards
 function startGame() {
-    const modalBoard = document.querySelector('.modal-board');
-    const allSquares = modalBoard.querySelectorAll('.grid-square');
+    const playerModalBoard = document.querySelector('.player-modal-board');
+    const allSquares = playerModalBoard.querySelectorAll('.grid-square');
 
-    const leftBoard = document.querySelector('.left-board');
-    const rightBoard = document.querySelector('.right-board');
+    const playerBoard = document.querySelector('.player-board');
+    const enemyBoard = document.querySelector('.enemy-board');
 
     function createBoardSquare() {
         const square = document.createElement('div');
@@ -70,12 +85,12 @@ function startGame() {
 
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
-            rightBoard.appendChild(createBoardSquare());
+            enemyBoard.appendChild(createBoardSquare());
         }
     }
 
     allSquares.forEach((square) => {
-        leftBoard.appendChild(square);
+        playerBoard.appendChild(square);
     });
 
     const placeShipModal = document.querySelector('.place-ship-modal');
