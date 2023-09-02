@@ -59,16 +59,23 @@ export default class GameBoard {
     // check if squares next to clicked pos are occupied before placing ship
     checkAdjacentSquares(index) {
         const calcRow = (x) => {
-            const row = Math.floor(x / 10);
+            let row = Math.floor(x / 10);
+            if (x % 10 === 0) {
+                row -= 1;
+            }
             return row;
         };
         const calcCol = (y) => {
-            const column = (y % 10) - 1;
+            let column = (y % 10) - 1;
+            if (column === -1) {
+                column = 9;
+            }
             return column;
         };
 
         const row = calcRow(index);
         const col = calcCol(index);
+
         let shipLength = 0;
         switch (this.player.placedShipCount) {
         case 0:
@@ -91,28 +98,42 @@ export default class GameBoard {
             break;
         }
 
-        const isValidSpot = (r, c) => {
-            if (this.currentPlacementRotation === 'row' && col === -1) return false;
+        const isValidPlacement = (r, c) => {
+            if (this.currentPlacementRotation === 'row' && col === 9) return false;
             if (this.currentPlacementRotation === 'col' && row === 9) return false;
+
+
             if (this.currentPlacementRotation === 'row' && this.board[r] && this.board[r][c] instanceof Ship) {
                 return false;
             }
-            if (this.currentPlacementRotation === 'col' && this.board[r] && this.board[r][col] instanceof Ship) {
+            if (this.currentPlacementRotation === 'col' && this.board[r] && this.board[r][c] instanceof Ship) {
                 return false;
             }
-            if (col > calcCol(index + shipLength - 1)) {
-                if (calcCol(index + shipLength - 1) !== -1) {
-                    return false;
-                }
+            if (this.currentPlacementRotation === 'row' && col > calcCol(index + shipLength - 1)) {
+                return false;
             }
+            if (this.currentPlacementRotation === 'col' && calcRow(index + (shipLength * 10) - 10) > 9) {
+                return false;
+            }
+
             return true;
         };
 
         // Check all adjacent squares, including diagonals
-        for (let r = row - 1; r <= row + 1; r++) {
-            for (let c = col - 1; c <= col + shipLength; c++) {
-                if (!isValidSpot(r, c)) {
-                    return; // Adjacent square is occupied or out of bounds
+        if (this.currentPlacementRotation === 'row') {
+            for (let r = row - 1; r <= row + 1; r++) {
+                for (let c = col - 1; c <= col + shipLength; c++) {
+                    if (!isValidPlacement(r, c)) {
+                        return; // Adjacent square is occupied or out of bounds
+                    }
+                }
+            }
+        } else if (this.currentPlacementRotation === 'col') {
+            for (let r = row - 1; r <= row + shipLength; r++) {
+                for (let c = col - 1; c <= col + 1; c++) {
+                    if (!isValidPlacement(r, c)) {
+                        return; // Adjacent square is occupied or out of bounds
+                    }
                 }
             }
         }

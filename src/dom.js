@@ -58,7 +58,6 @@ function handleClick(board) {
 function rotateShipPlacement(board) {
     const btn = document.querySelector('.rotate');
     btn.addEventListener('click', () => {
-        console.log('worked');
         if (board.currentPlacementRotation === 'row') {
             board.currentPlacementRotation = 'col';
         } else if (board.currentPlacementRotation === 'col') {
