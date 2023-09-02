@@ -54,6 +54,9 @@ export default class GameBoard {
     addShip(row, col, shipLength) {
         this.placeShip(shipLength, this.currentPlacementRotation, row, col);
         this.player.setShipCount();
+        if (this.player.placedShipCount === 5) {
+            DomHandler.startGame();
+        }
     }
 
     // check if squares next to clicked pos are occupied before placing ship

@@ -1,24 +1,5 @@
 import Ship from './ship';
 
-function displayBoards() {
-    const leftBoard = document.querySelector('.left-board');
-    const rightBoard = document.querySelector('.right-board');
-
-    function createBoardSquare() {
-        const square = document.createElement('div');
-        square.classList.add('grid-square');
-        square.classList.add('empty');
-        return square;
-    }
-
-    for (let i = 0; i < 10; i++) {
-        for (let j = 0; j < 10; j++) {
-            leftBoard.appendChild(createBoardSquare());
-            rightBoard.appendChild(createBoardSquare());
-        }
-    }
-}
-
 function updateBoard(board, side, row, col) {
     let UIBoard = null;
     if (side === 'left') {
@@ -72,11 +53,42 @@ function rotateShipPlacement(board) {
     });
 }
 
+// disable modal popup and display both boards
+function startGame() {
+    const modalBoard = document.querySelector('.modal-board');
+    const allSquares = modalBoard.querySelectorAll('.grid-square');
+
+    const leftBoard = document.querySelector('.left-board');
+    const rightBoard = document.querySelector('.right-board');
+
+    function createBoardSquare() {
+        const square = document.createElement('div');
+        square.classList.add('grid-square');
+        square.classList.add('empty');
+        return square;
+    }
+
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            rightBoard.appendChild(createBoardSquare());
+        }
+    }
+
+    allSquares.forEach((square) => {
+        leftBoard.appendChild(square);
+    });
+
+    const placeShipModal = document.querySelector('.place-ship-modal');
+    const darkOverlay = document.querySelector('.dark-overlay');
+    placeShipModal.style.display = 'none';
+    darkOverlay.style.display = 'none';
+}
+
 const DomHandler = {
-    displayBoards,
     updateBoard,
     handleClick,
     rotateShipPlacement,
+    startGame,
 };
 
 export default DomHandler;
