@@ -34,8 +34,20 @@ export default class GameBoard {
         }
     }
 
-    receiveAttack(row, col) {
-        const pos = this.board[row][col];
+    calcRow(x) {
+        const row = Math.floor(x / 10);
+        return row;
+    }
+
+    calcCol(x) {
+        const column = (x % 10);
+        return column;
+    }
+
+    receiveAttack(r, c) {
+        let row = r;
+        let col = c;
+        let pos = this.board[row][col];
         if (pos === null) { // if coordinate is empty
             this.board[row][col] = 'missed';
             DomHandler.updateBoard(this.board, this.side, row, col, 'missed');
@@ -44,7 +56,24 @@ export default class GameBoard {
 
         // position contains a ship, damage ship
         if (pos === 'hit' || pos === 'missed') {
-            return false;
+            if (this.side === 'player') {
+                while (true) {
+                    const index = Math.floor(Math.random() * 100);
+                    row = this.calcRow(index);
+                    col = this.calcCol(index);
+                    pos = this.board[row][col];
+                    if (pos !== 'hit' && pos !== 'missed') {
+                        if (pos === null) {
+                            this.board[row][col] = 'missed';
+                            DomHandler.updateBoard(this.board, this.side, row, col, 'missed');
+                            return true;
+                        }
+                        break;
+                    }
+                }
+            } else {
+                return false;
+            }
         }
         pos.timesHit += 1;
         this.board[row][col] = 'hit';
@@ -52,33 +81,25 @@ export default class GameBoard {
         const sunk = pos.isSunk();
         if (sunk) {
             this.player.shipsSunk += 1;
-            if (this.player.shipsSunk === 5) {
+            if (this.player.shipsSunk >= 5) {
                 this.player.lost = true;
+                DomHandler.displayWinner(this.enemyBoard.side);
             }
         }
         return true;
     }
 
     attackShip(index) {
-        const calcRow = (x) => {
-            const row = Math.floor(x / 10);
-            return row;
-        };
-        const calcCol = (y) => {
-            const column = (y % 10);
-            return column;
-        };
-
-        const row = calcRow(index);
-        const col = calcCol(index);
+        let row = this.calcRow(index);
+        let col = this.calcCol(index);
 
         const attack = this.enemyBoard.receiveAttack(row, col);
         if (attack) {
             // receive attack from ai
             while (true) {
                 const index = Math.floor(Math.random() * 100);
-                const row = calcRow(index);
-                const col = calcCol(index);
+                row = this.calcRow(index);
+                col = this.calcCol(index);
                 if (this.board[row][col] !== 'missed') {
                     this.receiveAttack(row, col);
                     break;
@@ -104,17 +125,8 @@ export default class GameBoard {
 
     // check if squares next to clicked pos are occupied before placing ship
     checkAdjacentSquares(index) {
-        const calcRow = (x) => {
-            const row = Math.floor(x / 10);
-            return row;
-        };
-        const calcCol = (y) => {
-            const column = (y % 10);
-            return column;
-        };
-
-        const row = calcRow(index);
-        const col = calcCol(index);
+        const row = this.calcRow(index);
+        const col = this.calcCol(index);
 
         let shipLength = 0;
         switch (this.player.placedShipCount) {
@@ -148,10 +160,10 @@ export default class GameBoard {
             }
 
             // check if out of bounds
-            if (this.currentRotation === 'row' && col > calcCol(index + shipLength - 1)) {
+            if (this.currentRotation === 'row' && col > this.calcCol(index + shipLength - 1)) {
                 return false;
             }
-            if (this.currentRotation === 'col' && calcRow(index + (shipLength * 10) - 10) > 9) {
+            if (this.currentRotation === 'col' && this.calcRow(index + (shipLength * 10) - 10) > 9) {
                 return false;
             }
 

@@ -32,6 +32,7 @@ function updateBoard(board, side, row, col, type) {
 
 function handleClick(board) {
     let allSquares = null;
+
     if (board.side === 'modal') {
         const playerModalBoard = document.querySelector('.player-modal-board');
         allSquares = playerModalBoard.querySelectorAll('.grid-square');
@@ -48,6 +49,7 @@ function handleClick(board) {
         allSquares = enemyBoard.querySelectorAll('.grid-square');
         allSquares.forEach((square, index) => {
             square.addEventListener('click', () => {
+                if (board.player.lost === true || board.enemyBoard.player.lost === true) return;
                 board.enemyBoard.attackShip(index);
             });
         });
@@ -97,11 +99,21 @@ function startGame() {
     darkOverlay.style.display = 'none';
 }
 
+function displayWinner(winner) {
+    const winnerDisplay = document.querySelector('.winner-display');
+    if (winner === 'player') {
+        winnerDisplay.textContent = 'You won!';
+    } else if (winner === 'enemy') {
+        winnerDisplay.textContent = 'You lost!';
+    }
+}
+
 const DomHandler = {
     updateBoard,
     handleClick,
     rotateShipPlacement,
     startGame,
+    displayWinner,
 };
 
 export default DomHandler;
