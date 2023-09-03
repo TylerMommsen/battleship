@@ -9,13 +9,5 @@ const enemyBoard = new GameBoard('enemy', enemy);
 const playerBoard = new GameBoard('player', player, enemyBoard);
 enemyBoard.enemyBoard = playerBoard;
 
-const playerModalBoard = new GameBoard('modal', player, enemyBoard);
+const playerModalBoard = new GameBoard('modal', player, enemyBoard, playerBoard);
 DomHandler.rotateShipPlacement(playerModalBoard);
-
-player.currentTurn = true;
-function gameLoop() {
-
-    requestAnimationFrame(gameLoop);
-}
-
-// requestAnimationFrame(gameLoop);

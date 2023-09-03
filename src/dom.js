@@ -44,12 +44,10 @@ function handleClick(board) {
         });
     }
     if (board.side === 'enemy') {
-        console.log('worked');
         const enemyBoard = document.querySelector('.enemy-board');
         allSquares = enemyBoard.querySelectorAll('.grid-square');
         allSquares.forEach((square, index) => {
             square.addEventListener('click', () => {
-                console.log('clicked');
                 board.enemyBoard.attackShip(index);
             });
         });
