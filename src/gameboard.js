@@ -20,7 +20,7 @@ export default class GameBoard {
             for (let i = 0; i < length; i++) {
                 this.board[row][col + i] = ship;
                 if (this.side === 'modal') {
-                    DomHandler.updateBoard(this.board, this.side, row, col + i, 'place-ship');
+                    DomHandler.updateBoard(this.side, row, col + i, 'place-ship');
                 }
             }
         }
@@ -28,7 +28,7 @@ export default class GameBoard {
             for (let i = 0; i < length; i++) {
                 this.board[row + i][col] = ship;
                 if (this.side === 'modal') {
-                    DomHandler.updateBoard(this.board, this.side, row + i, col, 'place-ship');
+                    DomHandler.updateBoard(this.side, row + i, col, 'place-ship');
                 }
             }
         }
@@ -50,7 +50,7 @@ export default class GameBoard {
         let pos = this.board[row][col];
         if (pos === null) { // if coordinate is empty
             this.board[row][col] = 'missed';
-            DomHandler.updateBoard(this.board, this.side, row, col, 'missed');
+            DomHandler.updateBoard(this.side, row, col, 'missed');
             return true;
         }
 
@@ -65,7 +65,7 @@ export default class GameBoard {
                     if (pos !== 'hit' && pos !== 'missed') {
                         if (pos === null) {
                             this.board[row][col] = 'missed';
-                            DomHandler.updateBoard(this.board, this.side, row, col, 'missed');
+                            DomHandler.updateBoard(this.side, row, col, 'missed');
                             return true;
                         }
                         break;
@@ -77,7 +77,7 @@ export default class GameBoard {
         }
         pos.timesHit += 1;
         this.board[row][col] = 'hit';
-        DomHandler.updateBoard(this.board, this.side, row, col, 'hit');
+        DomHandler.updateBoard(this.side, row, col, 'hit');
         const sunk = pos.isSunk();
         if (sunk) {
             this.player.shipsSunk += 1;
@@ -97,9 +97,9 @@ export default class GameBoard {
         if (attack) {
             // receive attack from ai
             while (true) {
-                const index = Math.floor(Math.random() * 100);
-                row = this.calcRow(index);
-                col = this.calcCol(index);
+                const newIndex = Math.floor(Math.random() * 100);
+                row = this.calcRow(newIndex);
+                col = this.calcCol(newIndex);
                 if (this.board[row][col] !== 'missed') {
                     this.receiveAttack(row, col);
                     break;

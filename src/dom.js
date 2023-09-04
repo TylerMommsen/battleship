@@ -1,6 +1,4 @@
-import Ship from './ship';
-
-function updateBoard(board, side, row, col, type) {
+function updateBoard(side, row, col, type) {
     let UIBoard = null;
     if (side === 'player') {
         UIBoard = document.querySelector('.player-board');
@@ -33,26 +31,31 @@ function updateBoard(board, side, row, col, type) {
 function handleClick(board) {
     let allSquares = null;
 
-    if (board.side === 'modal') {
-        const playerModalBoard = document.querySelector('.player-modal-board');
-        allSquares = playerModalBoard.querySelectorAll('.grid-square');
-        allSquares.forEach((square, index) => {
+    function createEventListeners(squaresList, side) {
+        squaresList.forEach((square, index) => {
             square.addEventListener('click', () => {
-                if (board.player.placedShipCount !== 5) {
-                    board.checkAdjacentSquares(index);
+                if (side === 'modal') {
+                    if (board.player.placedShipCount !== 5) {
+                        board.checkAdjacentSquares(index);
+                    }
+                } else if (side === 'enemy') {
+                    if (board.player.lost === true || board.enemyBoard.player.lost === true) return;
+                    board.enemyBoard.attackShip(index);
                 }
             });
         });
     }
+
+    if (board.side === 'modal') {
+        const playerModalBoard = document.querySelector('.player-modal-board');
+        allSquares = playerModalBoard.querySelectorAll('.grid-square');
+        createEventListeners(allSquares, board.side);
+    }
+
     if (board.side === 'enemy') {
         const enemyBoard = document.querySelector('.enemy-board');
         allSquares = enemyBoard.querySelectorAll('.grid-square');
-        allSquares.forEach((square, index) => {
-            square.addEventListener('click', () => {
-                if (board.player.lost === true || board.enemyBoard.player.lost === true) return;
-                board.enemyBoard.attackShip(index);
-            });
-        });
+        createEventListeners(allSquares, board.side);
     }
 }
 
